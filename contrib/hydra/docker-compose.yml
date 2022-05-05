@@ -4,6 +4,16 @@
 version: '3.7'
 
 services:
+  oathkeeper:
+    build: ./oathkeeper
+    ports:
+      - "4455:4455"
+      - "4456:4456"
+    command:
+      serve --config /config.yaml
+    networks:
+      - intranet
+
   hydra-migrate:
     image: oryd/hydra:v1.9.0-sqlite
     environment:
@@ -32,6 +42,12 @@ services:
       serve all --dangerous-force-http
     restart: on-failure # TODO figure out why we need this (incorporate health check into hydra migrate command?)
     environment:
+      - SERVE_PUBLIC_CORS_ENABLED=true
+      - SERVE_PUBLIC_CORS_ALLOWED_ORIGINS=*
+      - SERVE_PUBLIC_CORS_ALLOWED_METHODS=POST,GET,PUT,PATCH,DELETE
+      - SERVE_PUBLIC_CORS_ALLOWED_HEADERS=Authorization,Content-Type
+      - SERVE_PUBLIC_CORS_ALLOW_CREDENTIALS=true
+      - SERVE_PUBLIC_CORS_DEBUG=true
       - LOG_LEAK_SENSITIVE_VALUES=true
       - URLS_SELF_ISSUER=http://127.0.0.1:4444
       - URLS_SELF_PUBLIC=http://127.0.0.1:4444
@@ -42,6 +58,7 @@ services:
       - OIDC_SUBJECT_IDENTIFIERS_SUPPORTED_TYPES=public,pairwise
       - OIDC_SUBJECT_IDENTIFIERS_PAIRWISE_SALT=youReallyNeedToChangeThis
       - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true&mode=rwc
+      - OAUTH2_PKCE_ENFORCED_FOR_PUBLIC_CLIENTS=true
     networks:
       - intranet
     volumes:

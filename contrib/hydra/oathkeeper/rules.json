@@ -1,0 +1,170 @@
+[
+  {
+    "id": "allow-anonymous-with-header-mutator",
+    "version": "v0.36.0-beta.4",
+    "upstream": {
+      "url": "https://httpbin.org/anything/header",
+      "strip_path": "/foo"
+    },
+    "match": {
+      "url": "http://<127.0.0.1|localhost>:4455/foo/<.*>",
+      "methods": [
+        "GET"
+      ]
+    },
+    "authenticators": [
+      {
+        "handler": "anonymous"
+      }
+    ],
+    "authorizer": {
+      "handler": "allow"
+    },
+    "mutators": [
+      {
+        "handler": "header",
+        "config": {
+          "headers": {
+            "X-User": "{{ print .Subject }}"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "deny-anonymous",
+    "version": "v0.36.0-beta.4",
+    "upstream": {
+      "url": "https://httpbin.org/anything/deny"
+    },
+    "match": {
+      "url": "http://<127.0.0.1|localhost>:4455/anything/deny",
+      "methods": [
+        "GET"
+      ]
+    },
+    "authenticators": [
+      {
+        "handler": "anonymous"
+      }
+    ],
+    "authorizer": {
+      "handler": "deny"
+    },
+    "mutators": [
+      {
+        "handler": "noop"
+      }
+    ],
+    "errors": [
+      {
+        "handler": "json",
+        "config": {
+          "when": [
+            {
+              "request": {
+                "header": {
+                  "accept": [
+                    "application/json"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "handler": "redirect",
+        "config": {
+          "when": [
+            {
+              "request": {
+                "header": {
+                  "accept": [
+                    "text/*"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "allow-anonymous-with-id-token-mutator",
+    "version": "v0.36.0-beta.4",
+    "upstream": {
+      "url": "https://httpbin.org/anything/id_token"
+    },
+    "match": {
+      "url": "http://<127.0.0.1|localhost>:4455/anything/id_token",
+      "methods": [
+        "GET"
+      ]
+    },
+    "authenticators": [
+      {
+        "handler": "anonymous"
+      }
+    ],
+    "authorizer": {
+      "handler": "allow"
+    },
+    "mutators": [
+      {
+        "handler": "id_token"
+      }
+    ]
+  },
+  {
+    "id": "oauth-credentials-example",
+    "version": "v0.36.0-beta.4",
+    "upstream": {
+      "url": "https://httpbin.org/anything/oauth-cred-example"
+    },
+    "match": {
+      "url": "http://<127.0.0.1|localhost>:4455/anything/oauth-cred-example",
+      "methods": [
+        "GET"
+      ]
+    },
+    "authenticators": [
+      {
+        "handler": "oauth2_introspection",
+        "config": {
+          "required_scope": []
+        }
+      },
+      {
+        "handler": "oauth2_client_credentials",
+        "config": {
+          "token_url": "http://hydra:4444/oauth2/token",
+          "required_scope": []
+        }
+      },
+      {
+        "handler": "jwt",
+        "config": {
+          "required_scope": [],
+          "target_audience": ["https://my-backend-service/some/endpoint"],
+          "allowed_algorithms": ["RS256"]
+        }
+      }
+    ],
+    "authorizer": {
+      "handler": "allow"
+    },
+    "mutators": [
+      {
+        "handler": "hydrator"
+      },
+      {
+        "handler": "id_token",
+        "config": {
+          "ttl": "60s"
+        }
+      }
+    ]
+  }
+]

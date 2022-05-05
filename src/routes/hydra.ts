@@ -201,17 +201,25 @@ const createHydraSession = (
   context: Session
 ) => {
   const verifiableAddresses = context.identity.verifiable_addresses || []
+    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    console.log(context.identity)
   if (
     requestedScope.indexOf('email') === -1 ||
     verifiableAddresses.length === 0
   ) {
-    return {}
+      console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    return {
+        access_token: { user_id: 'bar' },
+        id_token: {
+            email: "foo@bar.com"
+        }
+    }
   }
-
+  console.log("---------------------------------------------")
   return {
     // This data will be available when introspecting the token. Try to avoid sensitive information here,
     // unless you limit who can introspect tokens. (Therefore the scope-check above)
-    // access_token: { foo: 'bar' },
+    access_token: { user_id: 'bar' },
 
     // This data will be available in the ID token.
     // Most services need email-addresses, so let's include that.
