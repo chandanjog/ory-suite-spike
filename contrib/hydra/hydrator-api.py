@@ -34,6 +34,8 @@ def hydrator():
     dummy_organisation_id = "organisation-id-1"
 
     # add "extra" fields for "allowed_account_ids" and "organisation_id" as claims that can be used for Authorization decision.
+    if(copy["extra"] == None): # when client_credentials flow is triggered
+        copy["extra"] = {}
     copy["extra"]["allowedAccountIds"] = dummy_account_ids
     copy["extra"]["organisationId"] = dummy_organisation_id
     return json.dumps(copy)

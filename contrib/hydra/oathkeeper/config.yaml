@@ -76,6 +76,8 @@ authenticators:
     config:
       jwks_urls:
         - file:///jwks.json
+      token_from:
+        header: Sequence-Authorization-Header
   oauth2_introspection:
     enabled: true
     config:

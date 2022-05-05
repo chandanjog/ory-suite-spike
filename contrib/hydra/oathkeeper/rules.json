@@ -131,12 +131,6 @@
     },
     "authenticators": [
       {
-        "handler": "oauth2_introspection",
-        "config": {
-          "required_scope": []
-        }
-      },
-      {
         "handler": "oauth2_client_credentials",
         "config": {
           "token_url": "http://hydra:4444/oauth2/token",
@@ -150,6 +144,12 @@
           "target_audience": ["https://my-backend-service/some/endpoint"],
           "allowed_algorithms": ["RS256"]
         }
+      },
+      {
+        "handler": "oauth2_introspection",
+        "config": {
+          "required_scope": []
+        }
       }
     ],
     "authorizer": {
@@ -162,7 +162,7 @@
       {
         "handler": "id_token",
         "config": {
-          "ttl": "60s"
+          "ttl": "1h"
         }
       }
     ]
