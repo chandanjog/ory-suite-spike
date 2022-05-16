@@ -13,7 +13,7 @@ export const apiBaseUrl = process.env.KRATOS_BROWSER_URL || apiBaseUrlInternal
 
 // Sets up the SDK using Ory Cloud
 let sdk: V0alpha2ApiInterface = new V0alpha2Api(
-  new Configuration({ basePath: apiBaseUrlInternal })
+  new Configuration({ basePath: apiBaseUrlInternal , baseOptions: { withCredentials: true}})
 ) as unknown as V0alpha2ApiInterface
 
 // Alternatively use the Ory Kratos SDK.
