@@ -45,12 +45,9 @@ log:
   level: debug
 
 hashers:
-  argon2:
-    parallelism: 1
-    memory: 131072
-    iterations: 2
-    salt_length: 16
-    key_length: 16
+  algorithm: bcrypt
+  bcrypt:
+    cost: 8
 
 identity:
   default_schema_url: file:///etc/config/kratos/identity.schema.json
