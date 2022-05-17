@@ -18,6 +18,7 @@ import {
     RejectRequest,
 } from '@ory/hydra-client'
 import {Session} from "@ory/kratos-client";
+import {Request, Response, NextFunction} from "express";
 
 export const isString = (x: any): x is string => typeof x === 'string'
 
@@ -27,9 +28,9 @@ export const isString = (x: any): x is string => typeof x === 'string'
 //     }
 // }
 
-// const redirectToLogin = (req: Request, res: Response, next: NextFunction) => {
-const redirectToLogin: RouteCreator =
-    (createHelpers) => async (req, res, next) => {
+const redirectToLogin = (req: Request, res: Response, next: NextFunction) => {
+// const redirectToLogin: RouteCreator =
+//     (createHelpers) => async (req, res, next) => {
         // if (!req.session) {
         //     next(Error('Unable to used express-session'))
         //     return
@@ -63,8 +64,9 @@ const redirectToLogin: RouteCreator =
         returnTo.searchParams.set('hydra_login_state', state)
         console.debug(`returnTo: "${returnTo.toString()}"`, returnTo)
 
-        const helpers = createHelpers(req)
-        const { kratosBrowserUrl } = helpers
+        // const helpers = createHelpers(req)
+        // const { kratosBrowserUrl } = helpers
+        const kratosBrowserUrl = "http://127.0.0.1:4433"
 
         console.debug('new URL: ', [
             kratosBrowserUrl + '/self-service/login/browser',
@@ -138,19 +140,20 @@ const createHydraLoginRoute: RouteCreator =
                     console.debug(
                         'Redirecting to login page because hydra_login_state was not found in the HTTP URL query parameters.'
                     )
-                    redirectToLogin(createHelpers)
+                    redirectToLogin(req, res, next)
                     return
                 }
 
-                const kratosSessionCookie = req.cookies.ory_kratos_session
-                if (!kratosSessionCookie) {
-                    // The state was set but we did not receive a session. Let's retry.
-                    console.debug(
-                        'Redirecting to login page because no ORY Kratos session cookie was set.'
-                    )
-                    redirectToLogin(createHelpers)
-                    return
-                }
+                // const kratosSessionCookie = req.cookies.ory_kratos_session
+                // if (!kratosSessionCookie) {
+                //     // The state was set but we did not receive a session. Let's retry.
+                //     console.debug(
+                //         'Redirecting to login page because no ORY Kratos session cookie was set.'
+                //     )
+                //     redirectToLogin(req, res, next)
+                //     return
+                // }
+
                 //
                 // if (hydraLoginState !== req.session?.hydraLoginState) {
                 //     // States mismatch, retry.
@@ -302,6 +305,9 @@ export const createHydraGetConsentRoute: RouteCreator =
 export const hydraPostConsent : RouteCreator =
     (createHelpers) => async (req, res, next) => {
     // The challenge is now a hidden input field, so let's take it from the request body instead
+    console.log("----------hydra post")
+    console.log(req)
+        
     const challenge = req.body.challenge
 
     // Let's see if the user decided to accept or reject the consent request..
@@ -379,12 +385,12 @@ export const registerHydraGetConsentRoute: RouteRegistrator = (
     app,
     createHelpers = defaultConfig
 ) => {
-    app.get('/hydra/login', createHydraGetConsentRoute(createHelpers))
+    app.get('/hydra/consent', createHydraGetConsentRoute(createHelpers))
 }
 
 export const registerHydraPostConsentRoute: RouteRegistrator = (
     app,
     createHelpers = defaultConfig
 ) => {
-    app.post('/hydra/login', hydraPostConsent(createHelpers))
+    app.post('/hydra/consent', hydraPostConsent(createHelpers))
 }
