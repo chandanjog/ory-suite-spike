@@ -19,7 +19,7 @@ let sdk: V0alpha2ApiInterface = new V0alpha2Api(
 // Alternatively use the Ory Kratos SDK.
 if (process.env.KRATOS_PUBLIC_URL) {
   sdk = new OpenSourceV0alpha2Api(
-    new Configuration({ basePath: apiBaseUrlInternal })
+    new Configuration({ basePath: apiBaseUrlInternal , baseOptions: { withCredentials: true} })
   )
 }
 

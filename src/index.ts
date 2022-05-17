@@ -12,12 +12,13 @@ import {
   registerErrorRoute,
   registerHealthRoute,
   registerLoginRoute,
+  registerHydraLoginRoute,
   registerRecoveryRoute,
   registerRegistrationRoute,
   registerSettingsRoute,
   registerStaticRoutes,
   registerVerificationRoute,
-  registerWelcomeRoute
+  registerWelcomeRoute, registerHydraGetConsentRoute, registerHydraPostConsentRoute
 } from './routes'
 
 const app = express()
@@ -45,6 +46,9 @@ app.engine(
 registerStaticRoutes(app)
 registerHealthRoute(app)
 registerLoginRoute(app)
+registerHydraLoginRoute(app)
+registerHydraGetConsentRoute(app)
+registerHydraPostConsentRoute(app)
 registerRecoveryRoute(app)
 registerRegistrationRoute(app)
 registerSettingsRoute(app)
