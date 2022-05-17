@@ -21,9 +21,11 @@ import {
   registerWelcomeRoute, registerHydraGetConsentRoute, registerHydraPostConsentRoute
 } from './routes'
 
+var bodyParser = require('body-parser')
 const app = express()
 
 app.use(middlewareLogger)
+app.use(bodyParser.urlencoded({ extended: false }))
 app.set('view engine', 'hbs')
 
 app.engine(

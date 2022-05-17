@@ -306,8 +306,8 @@ export const hydraPostConsent : RouteCreator =
     (createHelpers) => async (req, res, next) => {
     // The challenge is now a hidden input field, so let's take it from the request body instead
     console.log("----------hydra post")
-    console.log(req)
-        
+    console.log(req.body)
+
     const challenge = req.body.challenge
 
     // Let's see if the user decided to accept or reject the consent request..
