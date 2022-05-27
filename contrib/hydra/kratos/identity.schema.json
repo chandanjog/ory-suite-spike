@@ -18,6 +18,12 @@
               "password": {
                 "identifier": true
               }
+            },
+            "recovery": {
+              "via": "email"
+            },
+            "verification": {
+              "via": "email"
             }
           }
         }

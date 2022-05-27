@@ -1,3 +1,4 @@
+
 # ORY Kratos as Login Provider for ORY Hydra
 
 **Warning: ** this is a preliminary example and will properly be implemented in ORY Kratos directly.
@@ -20,6 +21,17 @@ $ docker-compose exec hydra \
     --response-types code,id_token \
     --scope openid,offline \
     --callbacks http://127.0.0.1:5555/callback
+```
+
+```shell script
+$ docker-compose exec hydra \
+    hydra clients create \
+    --endpoint http://127.0.0.1:4445 \
+    --id client-flow-12333 \
+    --secret secret \
+    --grant-types client_credentials \
+    --response-types token \
+    --scope scope-a,scope-b
 ```
 
 and perform an OAuth2 Authorize Code Flow
@@ -58,7 +70,7 @@ curl -X GET -H 'Sequence-Authorization-Header: eyJhbGciOiJSUzI1NiIsImtpZCI6IjNjM
 # Oauth introspection
 ```shell script
 
-curl -X GET -H 'Authorization: Bearer r3zZsaPoP-c0SyBXMZGicot7Ts634FHcxak1_kPCD9U.xFeMn7ZBDHsv-jYskj95O6WUJsFX1uywB_Fxr9JnFZo' http://localhost:4455/anything/oauth-cred-example
+curl -X GET -H 'Authorization: Bearer rh_SLS1BaZHz4bMA1TEu74epPGoiMkT4n_Bff6woYO8.NNvvuLvg2tiSBTOnmIIqW1OrI5vto0LhBfI-cm7DLn0' http://localhost:4455/anything/oauth-cred-example
 ```
 
 # Inspect the session hydrator endpoint data and add Extra fields used by id_token mutator.

@@ -13,6 +13,10 @@ selfservice:
   methods:
     password:
       enabled: true
+    link:
+      config:
+        lifespan: 1h
+        base_url: http://127.0.0.1:3000/
 
   flows:
     settings:
@@ -20,11 +24,14 @@ selfservice:
 
     verification:
       ui_url: http://127.0.0.1:3000/verification
-      enabled: false
+      enabled: true
+      after:
+        default_browser_return_url: http://127.0.0.1:3000/
+
 
     recovery:
       ui_url: http://127.0.0.1:3000/recovery
-      enabled: false
+      enabled: true
 
     logout:
       after:

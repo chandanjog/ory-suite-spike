@@ -116,7 +116,7 @@ services:
     environment:
       - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true
     command:
-      serve -c /etc/config/kratos/.kratos.yml --dev
+      serve -c /etc/config/kratos/.kratos.yml --watch-courier --dev
     volumes:
       -
         type: volume
@@ -129,6 +129,23 @@ services:
         target: /etc/config/kratos
     networks:
       - intranet
+
+  mailslurper:
+    image: oryd/mailslurper:latest-smtps
+    ports:
+      - '4436:4436'
+      - '4437:4437'
+      - '1025:1025'
+    networks:
+      - intranet
+
+#  mailhog:
+#    image: mailhog/mailhog:latest
+#    ports:
+#      - 1025:1025
+#      - 8025:8025
+#    networks:
+#      - intranet
 
 networks:
   intranet:

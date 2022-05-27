@@ -38,13 +38,13 @@ mutators:
       issuer_url: http://localhost:4455
       jwks_url: file:///jwks.json
       claims:
-        '{"aud": ["https://my-backend-service/some/endpoint"], "allowed-account-ids": "{{ print .Extra.allowedAccountIds }}", "organisation-id": "{{ print .Extra.organisationId }}" }'
+        '{"aud": ["https://my-backend-service/some/endpoint"], "allowed-account-ids": "{{ print .Extra.allowedAccountIds }}", "organisation-id": "{{ print .Extra.organisationId }}", "scope": "{{ print .Extra.scope }}"  }'
   hydrator:
     # Set enabled to true if the authenticator should be enabled and false to disable the authenticator. Defaults to false.
     enabled: true
     config:
       api:
-        url: http://59c1-2a02-2454-432-6d00-3de7-fa91-1f17-175e.ngrok.io/hydrator
+        url: http://7a95-2a02-2454-432-6d00-51f3-ec96-3b99-824b.ngrok.io/hydrator
         auth:
           basic:
             username: someUserName
