@@ -4,6 +4,19 @@
 version: '3.7'
 
 services:
+  postgresd:
+    image: postgres:9.6
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pg-init:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_USER=kratos
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_MULTIPLE_DATABASES=krato,hydra
+    networks:
+      - intranet
+
   oathkeeper:
     build: ./oathkeeper
     ports:
@@ -86,9 +99,12 @@ services:
       - /tmp/ui-node/logs:/root/.npm/_logs
 
   kratos-migrate:
-    image: oryd/kratos:v0.8.0-sqlite
+#    image: oryd/kratos:v0.8.0-sqlite
+    image: oryd/kratos:v0.9.0-alpha.2
     environment:
-      - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true&mode=rwc
+#      - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true&mode=rwc
+      - DSN=postgres://kratos:secret@postgresd:5432/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
+#      - DSN=postgres://postgres:postgres@postgresd:5432/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
     volumes:
       -
         type: volume
@@ -108,13 +124,15 @@ services:
   kratos:
     depends_on:
       - kratos-migrate
-    image: oryd/kratos:v0.8.0-sqlite
+#    image: oryd/kratos:v0.8.0-sqlite
+    image: oryd/kratos:v0.9.0-alpha.2
     ports:
       - "4433:4433" # public
       - "4434:4434" # admin
     restart: unless-stopped
     environment:
-      - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true
+#      - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true
+      - DSN=postgres://kratos:secret@postgresd:5432/kratos?sslmode=disable&max_conns=20&max_idle_conns=4
     command:
       serve -c /etc/config/kratos/.kratos.yml --watch-courier --dev
     volumes:

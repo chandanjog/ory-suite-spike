@@ -6,9 +6,6 @@ serve:
 
 selfservice:
   default_browser_return_url: http://127.0.0.1:3000/
-  whitelisted_return_urls:
-    - http://127.0.0.1:3000/
-    - http://127.0.0.1:3000/hydra/login
 
   methods:
     password:
@@ -57,7 +54,9 @@ hashers:
     cost: 8
 
 identity:
-  default_schema_url: file:///etc/config/kratos/identity.schema.json
+  schemas:
+    - id: default
+      url: file:///etc/config/kratos/identity.schema.json
 
 courier:
   smtp:
