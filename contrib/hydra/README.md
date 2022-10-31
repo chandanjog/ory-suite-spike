@@ -46,6 +46,46 @@ $ docker-compose exec hydra \
     --scope openid,offline
 ```
 
+docker-compose exec hydra hydra clients create --endpoint http://127.0.0.1:4445 --token-endpoint-auth-method none --callbacks http://localhost:3001/dashboard/ --allowed-cors-origins=http://localhost:3001 --scope openid,offline,product --name seqhq-1234
+
+curl --request POST -sL \
+--header "Content-Type: application/json" \
+--data '{
+"schema_id": "default",
+"state": "active",
+"traits": {
+"email": "email@test.com"
+},
+"credentials": {
+"password": {
+"config": {
+"password": "mysecurepassword"
+}
+}
+}
+}' http://127.0.0.1:4434/admin/identities
+
+--------------------------------
+Dashboard web ENV
+
+REACT_APP_CLIENT_ID=eb7ca558-79c8-4cea-8c61-e231da6850f9
+REACT_APP_REDIRECT_URI=http://localhost:3001/dashboard/
+REACT_APP_AUTHORIZATION_ENDPOINT=http://127.0.0.1:4444/oauth2/auth
+REACT_APP_TOKEN_ENDPOINT=http://127.0.0.1:4444/oauth2/token
+REACT_APP_REQUESTED_SCOPES=openid product
+REACT_APP_BFF_SERVER_URL=http://localhost:4000/graphql
+REACT_APP_SENTRY_DSN=https://62feed8e2df046afb5c10efd77b57827@o1307904.ingest.sentry.io/6553019
+REACT_APP_SENTRY_ENVIRONMENT=local
+REACT_APP_TOKEN_REVOKE_ENDPOINT=http://127.0.0.1:4444/oauth2/revoke
+REACT_APP_AUTH_URL=https://dev.seqhq.io/auth/logout
+REACT_APP_API_ORIGIN=https://dev.seqhq.io
+ 
+--------------------------------
+
+
+
+
+
 Next, create an OAuth2 Client for Client Credentials Flow
 ```shell script
 $ docker-compose exec hydra \
